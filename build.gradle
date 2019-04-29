@@ -1,0 +1,76 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+allprojects{
+	apply plugin: 'maven'
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	
+	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+	
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+	
+	configurations.all {
+	    resolutionStrategy {
+	    	cacheChangingModulesFor 0, 'seconds'
+	    	cacheDynamicVersionsFor 0, 'seconds'
+	    }
+	}
+	
+	repositories {
+        maven { url property('mavenUrl') }
+        mavenCentral()
+    }
+    
+    uploadArchives.repositories.mavenDeployer {
+        repository(url: property('releaseUploadUrl')) {
+            authentication(userName: property('releaseUploadUserName'), password: property('releaseUploadPassword'))
+        }
+        snapshotRepository(url: property('snapshotUploadUrl')) {
+            authentication(userName: property('snapshotUploadUserName'), password: property('snapshotUploadPassword'))
+        }
+    }
+	
+	configurations {
+	    provided
+	}
+	
+	sourceSets {
+	    main.compileClasspath += configurations.provided
+	    test.compileClasspath += configurations.provided
+	    test.runtimeClasspath += configurations.provided
+	}
+	eclipse.classpath.plusConfigurations += [ configurations.provided ]
+	
+	dependencies {
+	   compile('org.apache.commons:commons-lang3:3.3.2')
+	   compile('commons-codec:commons-codec:1.4')
+	   compile('org.slf4j:slf4j-api:1.7.7')
+	   compile('junit:junit:4.4')
+	   compile('org.assertj:assertj-core:2.9.0')
+	}
+	
+	group = 'knight.su.dawn'
+	version =  '1.0.0'
+	jar {
+		baseName = project.name
+	    manifest {
+	    	attributes 'Implementation-Title': 'Dawn distributed learning Project', 'Implementation-Version': version
+			attributes 'Main-Class': 'com.sf.dawn.core.main.Main'
+	    }
+	}
+	
+	task initSourceFolders {
+	    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+	    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+	}
+	
+	task wrapper(type: Wrapper) {
+        gradleVersion = '4.0.2'
+    }
+
+}
