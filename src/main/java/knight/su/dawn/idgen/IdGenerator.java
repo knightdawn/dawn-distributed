@@ -1,4 +1,4 @@
-package knight.su.dawn;
+package knight.su.dawn.idgen;
 
 import java.util.Base64;
 import java.util.UUID;
@@ -60,4 +60,8 @@ public class IdGenerator {
     public void setShardCount(int shardCount) {
         this.shardCount = shardCount;
     }
+    
+    public static void main(String[] args) {
+		System.out.println(new IdGenerator().genDefault("755"));
+	}
 }

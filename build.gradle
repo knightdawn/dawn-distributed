@@ -47,6 +47,8 @@ allprojects{
 	eclipse.classpath.plusConfigurations += [ configurations.provided ]
 	
 	dependencies {
+	   compile('org.apache.zookeeper:zookeeper:3.4.6')
+	   compile('org.apache.curator:curator-recipes:2.7.0')
 	   compile('org.apache.commons:commons-lang3:3.3.2')
 	   compile('commons-codec:commons-codec:1.4')
 	   compile('org.slf4j:slf4j-api:1.7.7')
